@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Card } from "../components/ui/card";
-import Navbar from "../components/Navbar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Navbar from "@/components/Navbar";
 import {
   Upload,
   FileText,
@@ -51,7 +51,7 @@ const UploadReport = () => {
     },
   ];
 
-  const handleDrag = (e: React.DragEvent) => {
+  const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -61,7 +61,7 @@ const UploadReport = () => {
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -71,14 +71,14 @@ const UploadReport = () => {
     }
   };
 
-  const handleFiles = (files: FileList) => {
+  const handleFiles = (files) => {
     toast({
       title: "Upload Successful",
       description: `${files.length} file(s) uploaded. Processing your report...`,
     });
   };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInput = (e) => {
     if (e.target.files) {
       handleFiles(e.target.files);
     }
