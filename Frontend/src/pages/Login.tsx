@@ -7,13 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import googleIcon from "../assets/google.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import googleIcon from "../assets/google.png";
 import { useAuthContext } from "../contexts/AuthContext";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function Login() {
   const { user, signinWithGoogle } = useAuthContext();
@@ -24,7 +25,7 @@ export default function Login() {
       navigate("/", { replace: true });
     }
   }, [user, navigate]);
-  if (user) return null;
+  if (user) return <Spinner />;
   const handleGoogleSignIn = async () => {
     setLoading(true);
     await signinWithGoogle();

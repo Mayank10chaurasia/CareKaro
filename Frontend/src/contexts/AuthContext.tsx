@@ -1,6 +1,7 @@
 import { signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, googleAuthProvider } from "../services/firebase.ts";
+import { toast } from "sonner";
 const AuthContext = createContext(null);
 export function useAuthContext() {
   return useContext(AuthContext);
@@ -51,8 +52,11 @@ export function AuthProvider({ children }) {
       const user = result.user;
       console.log("✅ Logged in user:", user);
       setUser(user);
+      toast.success("Sign in successfull");
       // You can access user.displayName, user.email, user.photoURL
     } catch (error) {
+      toast.error("Sign in failed");
+
       setUser(null);
       console.error("❌ Login error:", error);
     }
@@ -62,7 +66,9 @@ export function AuthProvider({ children }) {
       await firebaseSignOut(auth);
       console.log("🚪 User signed out");
       setUser(null);
+      toast.success("Signed out");
     } catch (error) {
+      toast.error("Error signing out");
       console.error("❌ Sign-out error:", error);
     }
   }
