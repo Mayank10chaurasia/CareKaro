@@ -91,18 +91,18 @@ export function AuthProvider({ children }) {
       toast.error("Sign in failed");
 
       setUser(null);
-      console.error("❌ Login error:", error);
+      console.error(" Login error:", error);
     }
   };
   async function signOut() {
     try {
       await firebaseSignOut(auth);
-      console.log("🚪 User signed out");
+      console.log(" User signed out");
       setUser(null);
       toast.success("Signed out");
     } catch (error) {
       toast.error("Error signing out");
-      console.error("❌ Sign-out error:", error);
+      console.error(" Sign-out error:", error);
     }
   }
   const value = {

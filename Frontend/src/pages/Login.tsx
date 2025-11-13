@@ -37,6 +37,8 @@ export default function Login() {
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+
   const navigate = useNavigate();
   useEffect(() => {
     verifyRecaptcha();
@@ -65,19 +67,23 @@ export default function Login() {
       toast.error("Invalid phone number format");
       return false;
     } else {
-      toast.success("Valid phone number ✅");
+      toast.success("Valid phone number ");
       return true;
     }
   };
   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!handleValidation()) return;
+    if (sendingOtp) return;
     try {
-      await sendOTP(phone); // OTP sent
-      reset(); // 🔥 restart countdown (3600 sec)
+      setSendingOtp(true);
+      await sendOTP(phone);
+      reset();
       toast.success("OTP sent!");
     } catch (err) {
       toast.error("Failed to send OTP");
+    } finally {
+      setSendingOtp(false);
     }
   };
 
@@ -113,10 +119,16 @@ export default function Login() {
                     variant="link"
                     onClick={handleSendOtp}
                     id="send-otp-button"
-                    disabled={loadingPhone || loadingGoogle || timer > 0}
+                    disabled={
+                      loadingPhone || loadingGoogle || timer > 0 || sendingOtp
+                    }
                     className="p-0 h-1"
                   >
-                    {timer > 0 ? `Resend in ${seconds}s` : "Send OTP"}
+                    {sendingOtp
+                      ? "Sending..."
+                      : timer > 0
+                      ? `Resend in ${seconds}s`
+                      : "Send OTP"}
                   </Button>
                 </div>
                 <PhoneInput

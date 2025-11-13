@@ -74,5 +74,6 @@ export default defineConfig([
 
 things to do-----------------------------------------------------
 
+fix: cancelling timer on app reload
+fix: multiple clicks on send OTP - add disabling the button on one click
 add richcolors to toast-------------------done✅✅
-fix cancelling timer on app reload
