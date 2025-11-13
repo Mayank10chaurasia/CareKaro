@@ -60,28 +60,31 @@ const Navbar = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar>
+                    {"Welcome back, "}
                     <AvatarImage
                       src={user.photoURL}
                       alt="photo"
                       className="rounded-full w-8 cursor-pointer ring-2 ring-border ring-offset-1"
                     />
-                    <AvatarFallback>{user.displayName}</AvatarFallback>
+                    <AvatarFallback>
+                      {user.displayName ?? user.phoneNumber}
+                    </AvatarFallback>
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="flex flex-col mt-4 gap-8 bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50  rounded-md border p-4 shadow-md outline-hidden w-80 mr-16">
                   <div className="flex flex-col gap-1 items-center justify-center">
                     <Avatar>
                       <AvatarImage
-                        src={user.photoURL}
+                        src={user?.photoURL}
                         alt="photo"
                         className="rounded-full cursor-pointer ring-1 ring-border ring-offset-1"
                       />
                       <AvatarFallback className="text-foreground">
-                        {user.displayName}
+                        {user?.displayName}
                       </AvatarFallback>
                     </Avatar>
-                    <p>{user.displayName}</p>
-                    <p className="text-muted-foreground">{user.email}</p>
+                    <p>{user?.displayName ?? user?.phoneNumber}</p>
+                    <p className="text-muted-foreground">{user?.email}</p>
                   </div>
                   <Button variant="destructive" onClick={signOut}>
                     Sign out
@@ -135,23 +138,25 @@ const Navbar = () => {
                         alt="photo"
                         className="rounded-full w-8 cursor-pointer ring-2 ring-border ring-offset-1"
                       />
-                      <AvatarFallback>{user.displayName}</AvatarFallback>
+                      <AvatarFallback>
+                        {user.displayName ?? user.phoneNumber}
+                      </AvatarFallback>
                     </Avatar>
                   </PopoverTrigger>
                   <PopoverContent className=" flex flex-col mt-4 gap-8 bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50  rounded-md border p-4 shadow-md outline-hidden w-80 mr-16">
                     <div className="flex flex-col gap-1 items-center justify-center">
                       <Avatar>
                         <AvatarImage
-                          src={user.photoURL}
+                          src={user?.photoURL}
                           alt="photo"
                           className="rounded-full cursor-pointer ring-1 ring-border ring-offset-1"
                         />
                         <AvatarFallback className="text-foreground">
-                          {user.displayName}
+                          {user?.displayName ?? user?.phoneNumber}
                         </AvatarFallback>
                       </Avatar>
-                      <p>{user.displayName}</p>
-                      <p className="text-muted-foreground">{user.email}</p>
+                      <p>{user?.displayName ?? user?.phoneNumber}</p>
+                      <p className="text-muted-foreground">{user?.email}</p>
                     </div>
                     <Button variant="destructive" onClick={signOut}>
                       Sign out

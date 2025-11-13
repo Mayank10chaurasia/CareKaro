@@ -15,7 +15,8 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
+      <Toaster richColors theme="light" />
+      <div id="recaptcha-verifier"></div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />

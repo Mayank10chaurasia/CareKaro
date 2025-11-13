@@ -1,51 +1,84 @@
-import { signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
+import { Spinner } from "@/components/ui/spinner.tsx";
+import {
+  signOut as firebaseSignOut,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  signInWithPopup,
+} from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth, googleAuthProvider } from "../services/firebase.ts";
 import { toast } from "sonner";
+import { auth, googleAuthProvider } from "../services/firebase.ts";
 const AuthContext = createContext(null);
 export function useAuthContext() {
   return useContext(AuthContext);
 }
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [otpSent, setOtpSent] = useState(false);
+  async function verifyRecaptcha() {
+    if (!window.recaptchaVerifier) {
+      console.log("verify recap");
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-verifier",
+        {
+          size: "invisible",
+          callback: async (response) => {
+            toast.success("reCAPTCHA verified!");
+          },
+          "expired-callback": () => {
+            toast.error("reCAPTCHA expired. Please try again.");
+          },
+        }
+      );
+    }
+  }
+  async function sendOTP(phoneNumber) {
+    try {
+      setOtpSent(false);
+      verifyRecaptcha();
+      const appVerifier = window.recaptchaVerifier;
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        appVerifier
+      );
+      console.log(confirmationResult);
+      setOtpSent(true);
+      toast.success("OTP sent");
+      window.confirmationResult = confirmationResult;
+    } catch (error) {
+      console.log(error.message);
+      console.log(error.code);
 
+      //sms not sent
+      setOtpSent(false);
+      toast.error(error.code);
+      throw new Error(error.code);
+    }
+  }
+  async function signInWithPhone(code: string) {
+    setOtpSent(false);
+    const confirmResult = window.confirmationResult;
+    try {
+      const userCredential = await confirmResult.confirm(code);
+      toast.success("Sign in succcessful");
+    } catch (error) {
+      setOtpSent(true);
+      toast.error("Incorrect OTP");
+    }
+  }
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       console.log("Firebase auth state changed:", user);
       setUser(user);
+      setLoading(false);
     });
     return unsubscribe;
   }, []);
 
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     console.log(user);
-  //     setUser(user);
-  //   });
-  //   return unsubscribe;
-  // }, []);
-  // useEffect(() => {
-  //   getRedirectResult();
-  // }, []);
-  // const getRedirectResult = async () => {
-  //   try {
-  //     const result = await getRedirectResult(auth);
-  //     console.log(result);
-  //     const credential = GoogleAuthProvider.credentialFromResult(result);
-  //     const token = credential.accessToken;
-  //     // The signed-in user info.
-  //     const user = result.user;
-  //     // IdP data available using getAdditionalUserInfo(result)
-  //     // ...
-  //   } catch (error) {
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     // The email of the user's account used.
-  //     const email = error.customData.email;
-  //     // The AuthCredential type that was used.
-  //     const credential = googleAuthProvider.credentialFromError(error);
-  //   }
-  // };
   const signinWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleAuthProvider);
@@ -77,6 +110,22 @@ export function AuthProvider({ children }) {
     signinWithGoogle,
     setUser,
     signOut,
+    signInWithPhone,
+    sendOTP,
+    otpSent,
+    setOtpSent,
+    verifyRecaptcha,
   };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {loading ? (
+        <div className="flex items-center justify-center gap-4 h-screen">
+          <Spinner />
+          <p>Loading...</p>
+        </div>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
+  );
 }
