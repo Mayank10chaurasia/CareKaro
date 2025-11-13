@@ -77,3 +77,12 @@ things to do-----------------------------------------------------
 fix: cancelling timer on app reload
 fix: multiple clicks on send OTP - add disabling the button on one click
 add richcolors to toast-------------------done✅✅
+
+.env---------paste this in frontend/.env safe to expose publically
+VITE_FIREBASE_API_KEY=AIzaSyD8k0wXugGv1JNRoTOaIacIqrcGjRQ11Es
+VITE_FIREBASE_AUTH_DOMAIN=carekaro-backend.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=carekaro-backend
+VITE_FIREBASE_STORAGE_BUCKET=carekaro-backend.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=326895100457
+VITE_FIREBASE_APP_ID=1:326895100457:web:c09285f67f5ca311ff7238
+VITE_FIREBASE_MEASUREMENT_ID=G-RZ0XZ722YS
